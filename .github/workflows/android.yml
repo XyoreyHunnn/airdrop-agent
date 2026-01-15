@@ -17,7 +17,7 @@ jobs:
       - name: Build web assets
         run: npm run build
         env:
-          VITE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # Itt kötjük össze a kettőt
+          VITE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
         
       - name: Setup Java JDK 21

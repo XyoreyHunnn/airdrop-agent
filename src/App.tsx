@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // CSERÉLD KI A SAJÁT KULCSODRA!
-const API_KEY = import.meta.env.VITE_AI_API_KEY; // Legyen ez a név!
+const API_KEY=
+ import.meta.env.VITE_AI_API_KEY; // Legyen ez a név!
 
 function App() {
   const [prompt, setPrompt] = useState("");
