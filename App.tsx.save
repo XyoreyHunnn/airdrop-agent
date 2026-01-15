@@ -1,0 +1,140 @@
+iport React, { useState, useEffect } from 'react';
+import { Brain, Search, Play, Plus, ShieldCheck, ZapOff, Globe } from 'lucide-react';
+
+interface Airdrop {
+  id: number;
+  project: string;
+  task: string;
+  confidence: number;
+  status: 'new' | 'executing' | 'completed';
+  network: string;
+  tvl: number; 
+  requiresCapital: boolean;
+  requiresGas: boolean;
+  twitterFollowers: number;
+}
+
+export default function AirdropAgent() {
+  const [rules, setRules] = useState<string[]>([
+    "Minden hálózat engedélyezve",
+    "Gas-mentes mód (0 GAS költség)",
+    "Nincs kezdőtőke (No deposit/stake)",
+    "Min. TVL: $1M",
+    "Min. 100k X követő"
+  ]);
+  
+  const [newRule, setNewRule] = useState("");
+  const [airdrops, setAirdrops] = useState<Airdrop[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const startSearch = () => {
+    setIsSearching(true);
+    setTimeout(() => {
+      const now = Date.now();
+      const candidates: Airdrop[] = [
+        {
+          id: now,
+          project: "Berachain",
+          task: "Daily Faucet & Social Quests",
+          confidence: 98,
+          status: 'new',
+          network: 'Berachain Testnet',
+          tvl: 450_000_000,
+          requiresCapital: false,
+          requiresGas: false,
+          twitterFollowers: 850_000
+        },
+        {
+          id: now + 1,
+          project: "Grass",
+          task: "Bandwidth Sharing (Browser Extension)",
+          confidence: 95,
+          status: 'new',
+          network: 'Solana/Off-chain',
+          tvl: 2_000_000,
+          requiresCapital: false,
+          requiresGas: false,
+          twitterFollowers: 400_000
+        },
+        {
+          id: now + 2,
+          project: "Linea Quest",
+          task: "Proof of Humanity (Off-chain)",
+          confidence: 90,
+          status: 'new',
+          network: 'Linea',
+          tvl: 25_000_000,
+          requiresCapital: false,
+          requiresGas: false,
+          twitterFollowers: 600_000
+        }
+      ];
+
+      const filtered = candidates.filter(c => 
+        !c.requiresCapital && 
+        !c.requiresGas && 
+        c.tvl >= 1_000_000 && 
+        c.twitterFollowers >= 100_000
+      );
+
+      setAirdrops(prev => [...filtered, ...prev]);
+      setIsSearching(false);
+    }, 1500);
+  };
+
+  const executeDrop = (id: number) => {
+    setAirdrops(prev => prev.map(d => d.id === id ? { ...d, status: 'executing' } : d));
+    setTimeout(() => {
+      setAirdrops(prev => prev.map(d => d.id === id ? { ...d, status: 'completed' } : d));
+    }, 2000);
+  };
+
+  const addRule = () => {
+    if (newRule.trim()) {
+      setRules(prev => [...prev, newRule.trim()]);
+      setNewRule("");
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-slate-950 text-white font-sans">
+ \
+     <div className="w-72 bg-slate-900 p-6 border-r border-slate-800">
+        <div className="flex items-center gap-2 mb-8 text-blue-400">
+          <Brain size={24} />
+          <h1 className="font-bold text-xl">Airdrop Trainer</h1>
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Aktív Szűrők</h2>
+          {rules.map((rule, i) => (
+            <div key={i} className="text-sm bg-slate-800/50 p-3 rounded-lg border border-slate-700 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+              {rule}
+            </div>
+          ))}
+          <div className="pt-4">
+            <input 
+              value={newRule} 
+              onChange={(e) => setNewRule(e.target.value)}
+              placeholder="Új szabály..." 
+              className="w-full bg-slate-800 text-sm p-2 rounded mb-2 border border-slate-700"
+            />
+            <button onClick={addRule} className="w-full bg-blue-600 py-2 rounded flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+              <Plus size={16} /> Tanítás
+            </button>
+          </div>      </div>
+      </div>
+
+      <div className="flex-1 p-8 overflow-y-auto">
+        <div className="flex justify-between items-center mb-10">
+          <div>
+            <h2 className="text-3xl font-bold italic">Discovery Engine</h2>
+            <p className="text-slate-400 mt-1">Szigorú gas-mentes üzemmód aktív</p  <button onClick={startSearch} disabled={isSearching} className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl flex items-center gap-3 font-bold transition-all disabled:opacity-50">
+            {isSearching ? "Szkennelés..." : <><Search size={20} /> Keresés indítása</>}
+          </button>
+        </div>
+
+        <div className="grid gap-6">
+          {aird
+ops.length === 0 && !isSearching && (
+        
