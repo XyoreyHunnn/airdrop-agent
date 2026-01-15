@@ -10,10 +10,17 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
-      - name: Build Android APK
-        uses: jonasmerlin/capacitor-action@v1
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          platforms: android
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Build with Gradle
+        run: |
+          npx cap sync
+          cd android && ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
