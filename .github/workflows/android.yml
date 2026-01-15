@@ -5,26 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run build
-      - name: Setup Android Project
-        run: |
-          npx cap init "Airdrop Agent" com.xyorey.airdrop --web-dir dist
-          npx cap add android || true
-          npx cap sync
-      - name: Setup Java
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build web assets
+        run: npm run build
+        
+      - name: Setup Java JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Build with Gradle
+          
+      - name: Build Android APK
         run: |
+          npx cap sync
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
