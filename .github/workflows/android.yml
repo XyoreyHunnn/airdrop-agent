@@ -15,9 +15,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-      - name: Build with Gradle
+      - name: Build Android
         run: |
           npx cap sync
           cd android && ./gradlew assembleDebug
